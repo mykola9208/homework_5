@@ -17,7 +17,6 @@ def grep(pattern):
 
 
 def add_word(word):
-    global WORDS
 
     def inner_func(inn):
         for i in range(0, len(inn) + 1):
@@ -40,14 +39,24 @@ def add_word(word):
                 num += 1
     return WORDS
 
+
 def get_words(chars):
-    global WORDS
     term = WORDS
     for i in chars:
         if term is not None:
             term = term.get(i)
-    print(term)
-    return
+    terminus = []
+
+    def list_terms(mass):
+        if type(mass) is dict:
+            while len(terminus) < 10 and type(mass) is dict and mass.get('TERM') is not None:
+                terminus.append(mass.get('TERM'))
+                break
+            while type(mass) is dict:
+                for inside in mass.values():
+                    return list_terms(inside)
+    list_terms(term)
+    return terminus
 
 
 if __name__ == '__main__':
@@ -72,5 +81,7 @@ if __name__ == '__main__':
     assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}}}}
     add_word('he')
     assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}, 'TERM': 'he'}}}
-    get_words('helpful')
-
+    get_words('hello')
+    assert set(get_words('he')) == {'he', 'hell', 'hello'}
+    assert get_words('l') == []
+    assert set(get_words('hel')) == {'hell', 'hello'}
