@@ -17,22 +17,22 @@ def grep(pattern):
 
 
 def add_word(word):
-
     def inner_func(inn):
         for i in range(0, len(inn) + 1):
             if i == len(inn):
                 return {'TERM': word}
             else:
                 return {inn[i]: inner_func(inn[i + 1:len(inn)])}
+
     num = 0
     temp = WORDS
-    while num < len(word)+1:
+    while num < len(word) + 1:
         if num == len(word):
             temp.setdefault('TERM', word)
             break
         else:
             if temp.get(word[num]) is None:
-                temp.setdefault(word[num], inner_func(word[num+1:len(word)]))
+                temp.setdefault(word[num], inner_func(word[num + 1:len(word)]))
                 break
             else:
                 temp = temp.get(word[num])
@@ -46,15 +46,18 @@ def get_words(chars):
         if term is not None:
             term = term.get(i)
     terminus = []
+    lis = []
 
     def list_terms(mass):
         if type(mass) is dict:
-            while len(terminus) < 10 and type(mass) is dict and mass.get('TERM') is not None:
-                terminus.append(mass.get('TERM'))
-                break
-            while type(mass) is dict:
-                for inside in mass.values():
-                    return list_terms(inside)
+            for value in mass.values():
+                lis.append(value)
+        else:
+            terminus.append(mass)
+        for cont in lis:
+            lis.remove(cont)
+            return list_terms(cont)
+
     list_terms(term)
     return terminus
 
@@ -75,13 +78,8 @@ if __name__ == '__main__':
     assert search.send('but you better be quick (bbq) otherwise') == 'but you better be quick (bbq) otherwise'
     search.close()
 
-    add_word('hello')
-    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}}}}}}
-    add_word('hell')
-    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}}}}
-    add_word('he')
-    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}, 'TERM': 'he'}}}
-    get_words('hello')
-    assert set(get_words('he')) == {'he', 'hell', 'hello'}
-    assert get_words('l') == []
-    assert set(get_words('hel')) == {'hell', 'hello'}
+    add_word('apple')
+    add_word('ananas')
+    add_word('antenna')
+    print(WORDS)
+    print(get_words('a'))
