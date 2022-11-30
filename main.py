@@ -56,8 +56,8 @@ def get_words(chars):
         for cont in lis:
             lis.remove(cont)
             return list_terms(cont)
-
-    list_terms(term)
+    if term is not None:
+        list_terms(term)
     return terminus
 
 
@@ -85,5 +85,5 @@ if __name__ == '__main__':
     assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}, 'TERM': 'he'}}}
     get_words('hello')
     assert set(get_words('he')) == {'he', 'hell', 'hello'}
-    print(get_words('l'))
+    assert get_words('l') == []
     assert set(get_words('hel')) == {'hell', 'hello'}
