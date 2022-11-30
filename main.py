@@ -2,10 +2,9 @@ WORDS = {}
 
 
 def flatten(arr):
-    result = []
     for item in arr:
-        result += item
-    return result
+        while len(item) > 0:
+            yield item.pop(0)
 
 
 def grep(pattern):
@@ -49,7 +48,7 @@ def get_words(chars):
     lis = []
 
     def list_terms(mass):
-        if type(mass) is dict:
+        if isinstance(mass, dict):
             for value in mass.values():
                 lis.append(value)
         else:
@@ -78,8 +77,13 @@ if __name__ == '__main__':
     assert search.send('but you better be quick (bbq) otherwise') == 'but you better be quick (bbq) otherwise'
     search.close()
 
-    add_word('apple')
-    add_word('ananas')
-    add_word('antenna')
-    print(WORDS)
-    print(get_words('a'))
+    add_word('hello')
+    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}}}}}}
+    add_word('hell')
+    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}}}}
+    add_word('he')
+    assert WORDS == {'h': {'e': {'l': {'l': {'o': {'TERM': 'hello'}, 'TERM': 'hell'}}, 'TERM': 'he'}}}
+    get_words('hello')
+    assert set(get_words('he')) == {'he', 'hell', 'hello'}
+    print(get_words('l'))
+    assert set(get_words('hel')) == {'hell', 'hello'}
