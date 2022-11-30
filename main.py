@@ -16,26 +16,11 @@ def grep(pattern):
 
 
 def add_word(word):
-    def inner_func(inn):
-        for i in range(0, len(inn) + 1):
-            if i == len(inn):
-                return {'TERM': word}
-            else:
-                return {inn[i]: inner_func(inn[i + 1:len(inn)])}
-
-    num = 0
     temp = WORDS
-    while num < len(word) + 1:
-        if num == len(word):
-            temp.setdefault('TERM', word)
-            break
-        else:
-            if temp.get(word[num]) is None:
-                temp.setdefault(word[num], inner_func(word[num + 1:len(word)]))
-                break
-            else:
-                temp = temp.get(word[num])
-                num += 1
+    for i in range(0, len(word)):
+        temp.setdefault(word[i], {})
+        temp = temp.get(word[i])
+    temp.setdefault('TERM', word)
     return WORDS
 
 
